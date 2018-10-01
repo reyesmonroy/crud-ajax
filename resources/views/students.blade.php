@@ -18,7 +18,7 @@
 		</div>
 		<div class="row">
 			<div class="col-md-12">
-				<table class="table table-hover">
+				<table class="table table-hover" id="listStudents">
 				  <thead class="thead-dark">
 				    <tr>
 				      <th scope="col">#</th>
@@ -26,6 +26,7 @@
 				      <th scope="col">Fecha Nacimiento</th>
 				      <th scope="col">Correo</th>
 				      <th scope="col">Acciones</th>
+				      @csrf
 				    </tr>
 				  </thead>
 				  <tbody>
@@ -170,7 +171,7 @@
                 type: 'POST',
                 url: 'students',
                 data: {
-                    '_token': $('meta[name=_token]').attr('content'),
+                    '_token': $('input[name=_token]').val(),
                     'nombre': $('#nombre_add').val(),
                     'fecha_nacimiento' : $('#fechan_add').val(),
                     'email': $('#email_add').val()
@@ -201,12 +202,14 @@
                         }
                     } else {
                         toastr.success('Successfully added Post!', 'Success Alert', {timeOut: 5000});
-                        $('#postTable').prepend("<tr class='item" + data.id + "'><td class='col1'>" + data.id + "</td><td>" + data.title + "</td><td>" + data.content + "</td><td class='text-center'><input type='checkbox' class='new_published' data-id='" + data.id + " '></td><td>Just now!</td><td><button class='show-modal btn btn-success' data-id='" + data.id + "' data-title='" + data.title + "' data-content='" + data.content + "'><span class='glyphicon glyphicon-eye-open'></span> Show</button> <button class='edit-modal btn btn-info' data-id='" + data.id + "' data-title='" + data.title + "' data-content='" + data.content + "'><span class='glyphicon glyphicon-edit'></span> Edit</button> <button class='delete-modal btn btn-danger' data-id='" + data.id + "' data-title='" + data.title + "' data-content='" + data.content + "'><span class='glyphicon glyphicon-trash'></span> Delete</button></td></tr>");
+                        //$('#listStudents').prepend("<tr class='item" + data.id + "'><td class='col1'>" + data.id + "</td><td>" + data.title + "</td><td>" + data.content + "</td><td class='text-center'><input type='checkbox' class='new_published' data-id='" + data.id + " '></td><td>Just now!</td><td><button class='show-modal btn btn-success' data-id='" + data.id + "' data-title='" + data.title + "' data-content='" + data.content + "'><span class='glyphicon glyphicon-eye-open'></span> Show</button> <button class='edit-modal btn btn-info' data-id='" + data.id + "' data-title='" + data.title + "' data-content='" + data.content + "'><span class='glyphicon glyphicon-edit'></span> Edit</button> <button class='delete-modal btn btn-danger' data-id='" + data.id + "' data-title='" + data.title + "' data-content='" + data.content + "'><span class='glyphicon glyphicon-trash'></span> Delete</button></td></tr>");
+                        $('#listStudents').append("<tr><th scope='row'>"+ data.id+"</th><td>"+ data.nombre +"</td><td>"+ data.fecha_nacimiento +"</td><td>"+ data.email +"</td><td><button class='show-modal btn btn-primary' data-id='"+ data.id +"' data-nombre='"+ data.nombre +"' data-fechan='"+ data.fecha_nacimiento +"' data-email='"+ data.email +"'><i class='fas fa-eye'></i></button><button class='edit-modal btn btn-warning' data-id='"+ data.id +"' data-nombre='"+ data.nombre +"' data-fechan='"+ data.fecha_nacimiento +"' data-email='"+ data.email +"'><i class='fas fa-pen-square'></i></button><button class='delete-modal btn btn-danger' data-id='"+ data.id +"' data-nombre='"+ data.nombre +"' data-fechan='"+ data.fecha_nacimiento +"' data-email='"+ data.email +"'><i class='fas fa-trash-alt'></i></button></td></tr>");
                         /*$('.new_published').iCheck({
                             checkboxClass: 'icheckbox_square-yellow',
                             radioClass: 'iradio_square-yellow',
                             increaseArea: '20%'
                         });
+
                         $('.new_published').on('ifToggled', function(event){
                             $(this).closest('tr').toggleClass('warning');
                         });
