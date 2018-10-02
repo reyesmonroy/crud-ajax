@@ -13,7 +13,7 @@ class StudentController extends Controller
     protected $rules = [
         'nombre' => 'required|min:2|max:32',
         'fecha_nacimiento' => 'required|date',
-        'email' => 'required|email'
+        'email' => 'required|email|unique:students'
     ];
 
     /**
@@ -47,6 +47,7 @@ class StudentController extends Controller
      */
     public function store(Request $request)
     {
+
         $validator = Validator::make(Input::all(), $this->rules);
 
         if ($validator->fails()) {
@@ -93,7 +94,25 @@ class StudentController extends Controller
      */
     public function update(Request $request, Student $student)
     {
-        //
+        $reglas = [
+            'nombre' => 'required|min:2|max:32',
+            'fecha_nacimiento' => 'required|date',
+            'email' => 'required|email|unique:students,email,'.$request->id
+        ];
+        $validator = Validator::make(Input::all(), $reglas);
+        
+        
+        if ($validator->fails()) {
+            return Response::json(array('errors' => $validator->getMessageBag()->toArray()));
+        } else {
+            $student = Student::findOrFail($request->id);
+            $student->nombre = $request->nombre;
+            $student->fecha_nacimiento = $request->fecha_nacimiento;
+            $student->email = $request->email;
+            $student->save();
+            return response()->json($student);
+        }
+ 
     }
 
     /**
@@ -102,8 +121,11 @@ class StudentController extends Controller
      * @param  \App\Student  $student
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Student $student)
+    public function destroy(Request $request)
     {
-        //
+        $student = Student::findOrFail($request->id);
+        $student->delete();
+
+        return response()->json($student);
     }
 }
